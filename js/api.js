@@ -1,5 +1,10 @@
 const API_KEY = 'aa5b5a15bf44788c02eaa041cf26323f';
 
+// Upewnij się, że karty są ukryte na początku
+document.addEventListener('DOMContentLoaded', function() {
+    hideWeatherCards();
+});
+
 function getWeatherByCity() {
     const cityName = document.getElementById('cityInput').value.trim();
     if (!cityName) {
@@ -27,6 +32,7 @@ function getWeatherByCity() {
       .catch(error => {
         console.error('Błąd podczas pobierania danych pogodowych:', error);
         showError(error.message);
+        hideWeatherCards(); // Ukryj karty przy błędzie
       })
       .finally(() => {
         hideLoading();
@@ -34,11 +40,40 @@ function getWeatherByCity() {
 }
 
 function displayWeatherData(data) {
+    // Pokaż karty pogodowe
+    showWeatherCards();
+    
+    document.getElementById('weatherIcon').innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="${data.weather[0].description}">`;
     document.getElementById('cityName').innerText = data.name;
-    document.getElementById('temperature').innerText =  data.main.temp;
+    document.getElementById('temperature').innerText =  `${data.main.temp.toFixed(1)} °C`;
     document.getElementById('description').innerText = data.weather[0].description;
-    document.getElementById('humidity').innerText = data.main.humidity;
-    document.getElementById('windSpeed').innerText = data.wind.speed ;
+    document.getElementById('feelsLike').innerText = `${data.main.feels_like.toFixed(1)} °C`;
+    document.getElementById('humidity').innerText = `${data.main.humidity}%`;
+    document.getElementById('pressure').innerText = `${data.main.pressure} hPa`;
+    document.getElementById('visibility').innerText = `${(data.visibility / 1000).toFixed(1)} km`;
+    const now = Date.now() / 1000; // aktualny czas w sekundach
+    let sunText, sunTime, sunIcon;
+
+    if (now < data.sys.sunrise) {
+      // Przed wschodem słońca
+      sunText = "Wschód słońca";
+      sunTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      sunIcon = "🌅";
+    } else if (now < data.sys.sunset) {
+      // Po wschodzie, przed zachodem
+      sunText = "Zachód słońca";
+      sunTime = new Date(data.sys.sunset * 1000).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      sunIcon = "🌇";
+    } else {
+      // Po zachodzie słońca
+      sunText = "Wschód słońca (jutro)";
+      sunTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      sunIcon = "🌅";
+    }
+
+    document.getElementById('sunRise').innerHTML = `${sunIcon} ${sunText}: ${sunTime}`;
+    document.getElementById('sunRiseLabel').innerText = sunText;
+    document.getElementById('windSpeed').innerText = data.wind.speed;
 }
 
 function showError(message) {
@@ -63,4 +98,26 @@ function showLoading() {
 function hideLoading() {
     const errorDiv = document.getElementById('weatherResult');
     errorDiv.classList.add('d-none');
+}
+
+function showWeatherCards() {
+    const mainCard = document.getElementById('mainWeatherCard');
+    const detailCards = document.getElementById('detailWeatherCards');
+    
+    mainCard.classList.remove('weather-hidden');
+    mainCard.classList.add('weather-visible');
+    
+    detailCards.classList.remove('weather-hidden');
+    detailCards.classList.add('weather-visible');
+}
+
+function hideWeatherCards() {
+    const mainCard = document.getElementById('mainWeatherCard');
+    const detailCards = document.getElementById('detailWeatherCards');
+    
+    mainCard.classList.remove('weather-visible');
+    mainCard.classList.add('weather-hidden');
+    
+    detailCards.classList.remove('weather-visible');
+    detailCards.classList.add('weather-hidden');
 }
