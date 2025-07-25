@@ -193,7 +193,8 @@ footer {
     background-color: #343a40;
     color: white;
     text-align: center;
-    position: relative;    
+    position: relative;
+    z-index: 1;    
 }
 
 .weatherDetails {
@@ -273,6 +274,122 @@ footer {
 /* Custom icon colors */
 .text-orange {
     color: #ff7675 !important;
+}
+
+/* Forecast cards styling */
+.forecast-container {
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.forecast-day-card {
+    margin: 5px;
+    padding: 15px 10px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    min-width: 110px;
+    max-width: 130px;
+    text-align: center;
+    flex: 1;
+}
+
+.forecast-day-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+    border-color: #007bff;
+}
+
+.forecast-icon {
+    margin-bottom: 8px;
+}
+
+.forecast-icon img {
+    transition: transform 0.3s ease;
+    width: 50px;
+    height: 50px;
+}
+
+.forecast-day-card:hover .forecast-icon img {
+    transform: scale(1.15) rotate(5deg);
+}
+
+#forecastCards {
+    gap: 15px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.forecast-day-card .card-label {
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.forecast-day-card .card-value {
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.forecast-desc {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 5px;
+    line-height: 1.2;
+}
+
+.temp-range {
+    font-size: 0.7rem;
+    color: #6c757d;
+    margin: 2px 0;
+}
+
+/* Responsive adjustments for forecast */
+@media (max-width: 768px) {
+    .forecast-day-card {
+        min-width: 90px;
+        max-width: 100px;
+        padding: 10px 5px;
+        margin: 3px;
+    }
+    
+    #forecastCards {
+        gap: 8px !important;
+    }
+    
+    .forecast-icon img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    .forecast-day-card .card-label {
+        font-size: 0.75rem;
+    }
+    
+    .forecast-day-card .card-value {
+        font-size: 0.95rem;
+    }
+    
+    .forecast-desc {
+        font-size: 0.65rem;
+    }
+}
+
+/* Ensure forecast section is hidden by default */
+#tempForNextDays.weather-hidden {
+    display: none !important;
+}
+
+#tempForNextDays.weather-visible {
+    display: flex !important;
+    flex-direction: column;
 }
 
 /* Hide weather cards by default - higher specificity to override Bootstrap */
